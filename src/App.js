@@ -538,14 +538,7 @@ export default function App(){
         <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
           {showSidebar?"✕ Close":"⚙ Edit Inputs"}
         </button>
-      </div>
-
-      {/* ── Testing banner ── */}
-      <div style={{background:"#7c3aed",padding:"8px 16px",display:"flex",alignItems:"center",gap:8}}>
-        <span style={{fontSize:12,flexShrink:0}}>⚠️</span>
-        <p style={{fontSize:11,color:"#fff",margin:0,lineHeight:1.4}}><strong>Testing Mode.</strong> Before public launch: own domain · privacy policy · legal review.</p>
-      </div>
-
+      </div>      
       {/* ── Status bar ── */}
       <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
