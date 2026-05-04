@@ -579,8 +579,8 @@ export default function App(){
               <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Edit Your Numbers</p>
               <button onClick={()=>setShowSidebar(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,paddingBottom:12}}>
-              {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"8px 6px",fontSize:12,fontWeight:600,borderRadius:6,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center"}}>{t}</button>)}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,paddingBottom:12}}>
+              {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"10px 8px",fontSize:12,fontWeight:600,borderRadius:8,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center",lineHeight:1.3}}>{t}</button>)}
             </div>
             <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
               <span style={{fontSize:12,flexShrink:0}}>🔒</span>
