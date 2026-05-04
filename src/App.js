@@ -158,6 +158,7 @@ export default function App(){
     return{fireNum,nw,projNW,ideal,gap,gapPct,cAlone,status,sc,sbg,sb,savR,fireAge,n,cpp,oas,portNeed,mre,extra,delay,spendCut,ann,cFV,g,projHome,debtPmt,mPort,mCPP,mOAS,totInc,surplus,portSurplus,portLasts,projRESP,totCESG,lifeCESG,y18,maxCESG,optRESP,futPrin,totPrin,gains,mult,contData,chart};
   },[inp]);
 
+  // Shared styles
   const card=(label,value,sub,color="#1d4ed8",bg="#fff")=>(
     <div style={{background:bg,borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
       <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",margin:"0 0 4px"}}>{label}</p>
@@ -227,6 +228,7 @@ export default function App(){
         <p style={{fontSize:10,color:"#9ca3af",margin:"6px 0 0"}}>CPP ~70% of max for {Math.min(Math.max(inp.retAge-22,0),39)} yrs. OAS at 65+.</p>
       </div>
     </>;
+
     if(st===1) return <>
       {sec("Income")}
       {inp2("Gross Annual Income","income",{pre:"$",step:1000})}
@@ -258,6 +260,7 @@ export default function App(){
         </p>
       </div>
     </>;
+
     if(st===2) return <>
       {sec("Home")}
       {inp2("Current Home Value","homeVal",{pre:"$",step:5000,hint:`Projected at age ${inp.retAge}: ${fmtS(c.projHome)} (mortgage-free)`})}
@@ -278,6 +281,7 @@ export default function App(){
       {inp2("Other Debt Balance","otherDebt",{pre:"$",step:1000})}
       {inp2("Other Monthly Debt Payments","mOtherDebt",{pre:"$",step:50})}
     </>;
+
     return <div>
       <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>📖 FIRE Glossary</p>
       <p style={{fontSize:12,color:"#9ca3af",margin:"0 0 16px"}}>Plain-English definitions. No jargon.</p>
@@ -381,6 +385,7 @@ export default function App(){
       </div>
     </>;
 
+    // Overview
     return <>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         {card("FIRE Number",fmtS(c.fireNum),"Portfolio needed","#7c3aed")}
@@ -520,6 +525,8 @@ export default function App(){
 
   return(
     <div style={{display:"flex",flexDirection:"column",minHeight:"100vh",fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#f8fafc"}}>
+
+      {/* ── Top nav ── */}
       <div style={{background:"#fff",borderBottom:"1px solid #e5e7eb",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
           <div style={{width:32,height:32,background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,color:"#fff",fontWeight:700}}>V</div>
@@ -532,6 +539,14 @@ export default function App(){
           {showSidebar?"✕ Close":"⚙ Edit Inputs"}
         </button>
       </div>
+
+      {/* ── Testing banner ── */}
+      <div style={{background:"#7c3aed",padding:"8px 16px",display:"flex",alignItems:"center",gap:8}}>
+        <span style={{fontSize:12,flexShrink:0}}>⚠️</span>
+        <p style={{fontSize:11,color:"#fff",margin:0,lineHeight:1.4}}><strong>Testing Mode.</strong> Before public launch: own domain · privacy policy · legal review.</p>
+      </div>
+
+      {/* ── Status bar ── */}
       <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
           <p style={{fontSize:10,fontWeight:700,color:c.sc,textTransform:"uppercase",letterSpacing:"0.08em",margin:"0 0 2px"}}>FIRE Status</p>
@@ -542,27 +557,42 @@ export default function App(){
           <p style={{fontSize:12,color:"#374151",margin:0}}>FIRE at age <strong style={{color:c.fireAge<=inp.retAge?"#059669":"#d97706"}}>{c.fireAge}{c.fireAge>inp.retAge?` (+${c.fireAge-inp.retAge}yr)`:c.fireAge<inp.retAge?` (${inp.retAge-c.fireAge}yr early!)`:""}</strong></p>
         </div>
       </div>
+
+      {/* ── Body ── */}
       <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
+
+        {/* Sidebar — slide in on mobile, fixed on desktop */}
         {showSidebar&&(
           <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:40}} onClick={()=>setShowSidebar(false)}/>
         )}
-        <div style={{position:"fixed",top:0,bottom:0,left:0,width:320,background:"#fff",zIndex:45,transform:showSidebar?"translateX(0)":"translateX(-100%)",transition:"transform 0.25s ease",display:"flex",flexDirection:"column",boxShadow:showSidebar?"4px 0 20px rgba(0,0,0,0.15)":"none",overflowY:"auto"}}>
+        <div style={{
+          position:"fixed",top:0,bottom:0,left:0,
+          width:320,background:"#fff",zIndex:45,
+          transform:showSidebar?"translateX(0)":"translateX(-100%)",
+          transition:"transform 0.25s ease",
+          display:"flex",flexDirection:"column",
+          boxShadow:showSidebar?"4px 0 20px rgba(0,0,0,0.15)":"none",
+          overflowY:"auto",
+        }}>
           <div style={{padding:"16px 16px 0",position:"sticky",top:0,background:"#fff",borderBottom:"1px solid #f0f0f0",zIndex:1}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
               <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Edit Your Numbers</p>
               <button onClick={()=>setShowSidebar(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
             </div>
-            <div style={{display:"flex",gap:4,flexWrap:"wrap",paddingBottom:12}}>
-              {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"6px 10px",fontSize:11,fontWeight:600,borderRadius:6,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280"}}>{t}</button>)}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,paddingBottom:12}}>
+              {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"8px 6px",fontSize:12,fontWeight:600,borderRadius:6,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center"}}>{t}</button>)}
             </div>
             <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
               <span style={{fontSize:12,flexShrink:0}}>🔒</span>
-              <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}><strong>Your data never leaves your browser.</strong> Nothing stored or visible to anyone.</p>
+              <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}><strong>Your data never leaves your browser.</strong> Nothing stored or visible to anyone — including the creator.</p>
             </div>
           </div>
           <div style={{padding:16,flex:1}}>{renderSidebar()}</div>
         </div>
+
+        {/* Main dashboard */}
         <div style={{flex:1,overflowY:"auto",padding:"12px 16px 24px",maxWidth:800,margin:"0 auto",width:"100%"}}>
+          {/* Dashboard tabs */}
           <div style={{display:"flex",gap:4,marginBottom:14,background:"#f3f4f6",borderRadius:10,padding:4}}>
             {DTABS.map((t,idx)=><button key={idx} onClick={()=>setDt(idx)} style={{flex:1,padding:"8px 4px",fontSize:12,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:dt===idx?"#fff":"transparent",color:dt===idx?"#111827":"#6b7280",boxShadow:dt===idx?"0 1px 3px rgba(0,0,0,0.1)":undefined,transition:"all 0.15s"}}>{t}</button>)}
           </div>
