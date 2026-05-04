@@ -15,15 +15,15 @@ const STABS=["About You","Income & Savings","Assets & Debts","Learn"];
 const DTABS=["Overview","Contributions","Retirement"];
 
 const DEF={
-  age:36,retAge:46,province:"ON",life:90,
-  income:210000,incGrowth:2,
-  expenses:7600,
-  homeVal:823000,homeApp:4,
-  tfsa:13000,rrsp:10000,nonReg:10000,cash:0,
-  mTFSA:2000,mRRSP:2000,mOther:1000,mMatch:0,
-  kids:1,kidAge:5,respBal:0,mRESP:208,
-  mortBal:782000,mortRate:3.55,mMort:3600,otherDebt:0,mOtherDebt:0,
-  ret:12,inf:3,swr:4,
+  age:30,retAge:55,province:"ON",life:90,
+  income:0,incGrowth:2,
+  expenses:0,
+  homeVal:0,homeApp:4,
+  tfsa:0,rrsp:0,nonReg:0,cash:0,
+  mTFSA:0,mRRSP:0,mOther:0,mMatch:0,
+  kids:0,kidAge:5,respBal:0,mRESP:0,
+  mortBal:0,mortRate:5,mMort:0,otherDebt:0,mOtherDebt:0,
+  ret:7,inf:3,swr:4,
 };
 
 const gaFV=(p,r,g,n)=>{
@@ -538,7 +538,14 @@ export default function App(){
         <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
           {showSidebar?"✕ Close":"⚙ Edit Inputs"}
         </button>
-      </div>      
+      </div>
+
+      {/* ── Testing banner ── */}
+      <div style={{background:"#7c3aed",padding:"8px 16px",display:"flex",alignItems:"center",gap:8}}>
+        <span style={{fontSize:12,flexShrink:0}}>⚠️</span>
+        <p style={{fontSize:11,color:"#fff",margin:0,lineHeight:1.4}}><strong>Testing Mode.</strong> Before public launch: own domain · privacy policy · legal review.</p>
+      </div>
+
       {/* ── Status bar ── */}
       <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
