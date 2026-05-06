@@ -158,7 +158,6 @@ export default function App(){
     return{fireNum,nw,projNW,ideal,gap,gapPct,cAlone,status,sc,sbg,sb,savR,fireAge,n,cpp,oas,portNeed,mre,extra,delay,spendCut,ann,cFV,g,projHome,debtPmt,mPort,mCPP,mOAS,totInc,surplus,portSurplus,portLasts,projRESP,totCESG,lifeCESG,y18,maxCESG,optRESP,futPrin,totPrin,gains,mult,contData,chart};
   },[inp]);
 
-  // Shared styles
   const card=(label,value,sub,color="#1d4ed8",bg="#fff")=>(
     <div style={{background:bg,borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
       <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",margin:"0 0 4px"}}>{label}</p>
@@ -168,28 +167,28 @@ export default function App(){
   );
 
   const inp2=(label,key,opts={})=>(
-    <div style={{marginBottom:12}}>
-      <label style={{display:"block",fontSize:11,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:4}}>{label}</label>
+    <div style={{marginBottom:14}}>
+      <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>{label}</label>
       <div style={{display:"flex",alignItems:"center",background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:8,overflow:"hidden"}}>
-        {opts.pre&&<span style={{padding:"10px 12px",color:"#9ca3af",fontSize:13,background:"#f3f4f6",borderRight:"1px solid #e5e7eb"}}>{opts.pre}</span>}
-        <input type="number" value={inp[key]} onChange={set(key)} step={opts.step||1} min={opts.min||0} max={opts.max} style={{flex:1,padding:"10px 12px",border:"none",background:"transparent",outline:"none",fontSize:14,color:"#111827"}}/>
-        {opts.suf&&<span style={{padding:"10px 12px",color:"#9ca3af",fontSize:13,background:"#f3f4f6",borderLeft:"1px solid #e5e7eb"}}>{opts.suf}</span>}
+        {opts.pre&&<span style={{padding:"11px 13px",color:"#9ca3af",fontSize:14,background:"#f3f4f6",borderRight:"1px solid #e5e7eb"}}>{opts.pre}</span>}
+        <input type="number" value={inp[key]} onChange={set(key)} step={opts.step||1} min={opts.min||0} max={opts.max} style={{flex:1,padding:"11px 13px",border:"none",background:"transparent",outline:"none",fontSize:15,color:"#111827"}}/>
+        {opts.suf&&<span style={{padding:"11px 13px",color:"#9ca3af",fontSize:14,background:"#f3f4f6",borderLeft:"1px solid #e5e7eb"}}>{opts.suf}</span>}
       </div>
-      {opts.hint&&<p style={{fontSize:10,color:"#9ca3af",marginTop:4,marginBottom:0,lineHeight:1.4}}>{opts.hint}</p>}
+      {opts.hint&&<p style={{fontSize:11,color:"#9ca3af",marginTop:5,marginBottom:0,lineHeight:1.4}}>{opts.hint}</p>}
     </div>
   );
 
   const sldr=(label,key,min,max,step=0.5,suf="")=>(
-    <div style={{marginBottom:16}}>
-      <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-        <span style={{fontSize:13,color:"#374151",fontWeight:500}}>{label}</span>
-        <span style={{fontSize:14,color:"#1d4ed8",fontWeight:700}}>{inp[key]}{suf}</span>
+    <div style={{marginBottom:18}}>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+        <span style={{fontSize:14,color:"#374151",fontWeight:500}}>{label}</span>
+        <span style={{fontSize:15,color:"#1d4ed8",fontWeight:700}}>{inp[key]}{suf}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={inp[key]} onChange={set(key)} style={{width:"100%",accentColor:"#1d4ed8",height:4}}/>
     </div>
   );
 
-  const sec=t=><p style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.07em",margin:"18px 0 10px",borderBottom:"1px solid #f3f4f6",paddingBottom:6}}>{t}</p>;
+  const sec=t=><p style={{fontSize:11,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.07em",margin:"18px 0 10px",borderBottom:"1px solid #f3f4f6",paddingBottom:6}}>{t}</p>;
 
   const TTip=({active,payload,label})=>{
     if(!active||!payload?.length) return null;
@@ -208,9 +207,9 @@ export default function App(){
       {inp2("Current Age","age",{suf:"yrs",min:18,max:80})}
       {inp2("Target Retirement Age","retAge",{suf:"yrs",min:40,max:80})}
       {inp2("Life Expectancy","life",{suf:"yrs",min:70,max:100})}
-      <div style={{marginBottom:12}}>
-        <label style={{display:"block",fontSize:11,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:4}}>Province</label>
-        <select value={inp.province} onChange={setS("province")} style={{width:"100%",padding:"10px 12px",background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:8,fontSize:14,color:"#111827",outline:"none"}}>
+      <div style={{marginBottom:14}}>
+        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Province</label>
+        <select value={inp.province} onChange={setS("province")} style={{width:"100%",padding:"11px 13px",background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:8,fontSize:14,color:"#111827",outline:"none"}}>
           {PROVINCES.map(p=><option key={p}>{p}</option>)}
         </select>
       </div>
@@ -228,7 +227,6 @@ export default function App(){
         <p style={{fontSize:10,color:"#9ca3af",margin:"6px 0 0"}}>CPP ~70% of max for {Math.min(Math.max(inp.retAge-22,0),39)} yrs. OAS at 65+.</p>
       </div>
     </>;
-
     if(st===1) return <>
       {sec("Income")}
       {inp2("Gross Annual Income","income",{pre:"$",step:1000})}
@@ -251,16 +249,15 @@ export default function App(){
       {inp2("Monthly Other Investments","mOther",{pre:"$",step:50})}
       {inp2("Employer Match (monthly)","mMatch",{pre:"$",step:50})}
       {sec("RESP — Education Savings")}
-      {inp2("Number of Children","kids",{min:1,max:8})}
+      {inp2("Number of Children","kids",{min:0,max:8})}
       {inp2("Youngest Child's Age","kidAge",{suf:"yrs",min:0,max:17})}
       {inp2("Monthly RESP Contribution","mRESP",{pre:"$",step:25,hint:`$${c.optRESP}/mo maximizes the $500/yr CESG grant`})}
-      <div style={{padding:"10px 12px",background:c.maxCESG?"#ecfdf5":"#fffbeb",borderRadius:8,border:`1px solid ${c.maxCESG?"#6ee7b7":"#fcd34d"}`}}>
+      {inp.kids>0&&<div style={{padding:"10px 12px",background:c.maxCESG?"#ecfdf5":"#fffbeb",borderRadius:8,border:`1px solid ${c.maxCESG?"#6ee7b7":"#fcd34d"}`}}>
         <p style={{fontSize:11,fontWeight:600,color:c.maxCESG?"#065f46":"#92400e",margin:0}}>
           {c.maxCESG?"✓ CESG maximized — $500/yr per child":`Contribute $${c.optRESP}/mo to unlock full CESG`}
         </p>
-      </div>
+      </div>}
     </>;
-
     if(st===2) return <>
       {sec("Home")}
       {inp2("Current Home Value","homeVal",{pre:"$",step:5000,hint:`Projected at age ${inp.retAge}: ${fmtS(c.projHome)} (mortgage-free)`})}
@@ -281,7 +278,6 @@ export default function App(){
       {inp2("Other Debt Balance","otherDebt",{pre:"$",step:1000})}
       {inp2("Other Monthly Debt Payments","mOtherDebt",{pre:"$",step:50})}
     </>;
-
     return <div>
       <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>📖 FIRE Glossary</p>
       <p style={{fontSize:12,color:"#9ca3af",margin:"0 0 16px"}}>Plain-English definitions. No jargon.</p>
@@ -299,6 +295,55 @@ export default function App(){
 
   const progPct=Math.min((c.nw/c.fireNum)*100,100);
   const ahead=c.projNW>=c.fireNum;
+
+  const footer=(
+    <div style={{display:"flex",flexDirection:"column",gap:12,marginTop:4}}>
+      {/* Subscribe */}
+      <div style={{background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:12,padding:"20px 24px"}}>
+        <p style={{fontSize:14,fontWeight:700,color:"#fff",margin:"0 0 4px"}}>Get monthly Canadian FIRE insights</p>
+        <p style={{fontSize:11,color:"rgba(255,255,255,0.8)",margin:"0 0 14px"}}>Real numbers. Real strategies. No fluff. Unsubscribe anytime.</p>
+        <a href="https://vestly.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer"
+          style={{display:"inline-block",padding:"10px 20px",background:"#fff",color:"#1d4ed8",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none"}}>
+          Subscribe — it's free
+        </a>
+      </div>
+      {/* Questrade */}
+      <div style={{background:"#fff",borderRadius:12,padding:"16px 20px",border:"1px solid #e5e7eb",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+        <div>
+          <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 3px"}}>Ready to start investing?</p>
+          <p style={{fontSize:11,color:"#6b7280",margin:0}}>Open a Questrade account and get <strong style={{color:"#059669"}}>$50 in free trades</strong> to get started.</p>
+        </div>
+        <a href="https://start.questrade.com/?oaa_promo=685817906487902&s_cid=RAF14_share_link_refer_a_friend_email&utm_medium=share_link&utm_source=refer_a_friend&utm_campaign=RAF14&utm_content=personalized_link"
+          target="_blank" rel="noopener noreferrer"
+          style={{flexShrink:0,display:"inline-block",padding:"10px 16px",background:"#e8173e",color:"#fff",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap"}}>
+          Open Questrade →
+        </a>
+      </div>
+      {/* Built by */}
+      <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
+        <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 6px"}}>👋 Built by Nikhil</p>
+        <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>A Canadian DIY investor based in Ontario. I built Vestly because I couldn't find a single calculator that understood the Canadian picture — TFSA, RRSP, CPP, OAS, mortgage payoff, all of it together. So I built one. It's free, your data never leaves your browser, and I'm still improving it. <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback" style={{color:"#1d4ed8"}}>Send me your feedback →</a></p>
+      </div>
+      {/* Feedback */}
+      <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
+        <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💬 Got feedback?</p>
+        <p style={{fontSize:11,color:"#6b7280",margin:"0 0 12px"}}>What's confusing? What's missing? What would make this more useful?</p>
+        <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback"
+          style={{display:"inline-block",padding:"8px 16px",background:"#1d4ed8",color:"#fff",borderRadius:8,fontSize:12,fontWeight:600,textDecoration:"none"}}>
+          Send feedback
+        </a>
+      </div>
+      {/* Legal footer */}
+      <div style={{textAlign:"center",padding:"4px 0 8px"}}>
+        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>For illustrative purposes only. Not financial advice. Consult a licensed financial planner.</p>
+        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>🔒 Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
+        <p style={{fontSize:10,color:"#d1d5db",margin:0}}>
+          <a href="/privacy.html" style={{color:"#9ca3af",textDecoration:"underline"}}>Privacy Policy</a>
+          {" · "}© {new Date().getFullYear()} Vestly
+        </p>
+      </div>
+    </div>
+  );
 
   const renderDash=()=>{
     if(dt===1) return <>
@@ -385,7 +430,6 @@ export default function App(){
       </div>
     </>;
 
-    // Overview
     return <>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         {card("FIRE Number",fmtS(c.fireNum),"Portfolio needed","#7c3aed")}
@@ -458,7 +502,7 @@ export default function App(){
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <div style={{background:"#f0fdf4",borderRadius:10,padding:14,border:"1px solid #d1fae5"}}>
+      {inp.kids>0&&<div style={{background:"#f0fdf4",borderRadius:10,padding:14,border:"1px solid #d1fae5"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
             <div style={{width:28,height:28,background:"#059669",borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"#fff"}}>🎓</div>
@@ -480,7 +524,7 @@ export default function App(){
             </div>
           )}
         </div>
-      </div>
+      </div>}
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         <div style={{background:"#fff",borderRadius:10,padding:14,border:"1px solid #f0f0f0"}}>
           <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 10px"}}>Gap Analysis</p>
@@ -495,7 +539,7 @@ export default function App(){
             </div>
           )}
           <div style={{marginTop:10,padding:"8px 10px",background:"#f0fdf4",borderRadius:7}}>
-            <p style={{fontSize:10,fontWeight:700,color:"#166534",margin:"0 0 2px"}}>Govt Benefits</p>
+            <p style={{fontSize:10,fontWeight:700,color:"#166634",margin:"0 0 2px"}}>Govt Benefits</p>
             <p style={{fontSize:10,color:"#15803d",margin:0}}>CPP ~{fmt(c.cpp)}/yr · OAS ~{fmt(c.oas)}/yr{c.oas===0?" (at 65)":""}</p>
           </div>
         </div>
@@ -516,122 +560,57 @@ export default function App(){
           </div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",padding:"8px 0 16px"}}>
-        {/* Email capture */}
-        <div style={{background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:12,padding:"20px 24px",marginBottom:12,textAlign:"left"}}>
-          <p style={{fontSize:14,fontWeight:700,color:"#fff",margin:"0 0 4px"}}>Get monthly Canadian FIRE insights</p>
-          <p style={{fontSize:11,color:"rgba(255,255,255,0.8)",margin:"0 0 14px"}}>Real numbers. Real strategies. No fluff. Unsubscribe anytime.</p>
-          <div style={{display:"flex",gap:8}}>
-            <a href="https://vestly.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer"
-              style={{display:"inline-block",padding:"10px 20px",background:"#fff",color:"#1d4ed8",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none"}}>
-              Subscribe — it's free
-            </a>
-          </div>
-        </div>
-        {/* Questrade referral */}
-        <div style={{background:"#fff",borderRadius:12,padding:"16px 20px",marginBottom:12,border:"1px solid #e5e7eb",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
-          <div>
-            <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 3px"}}>Ready to start investing?</p>
-            <p style={{fontSize:11,color:"#6b7280",margin:0}}>Open a Questrade account and get <strong style={{color:"#059669"}}>$50 in free trades</strong> to get started.</p>
-          </div>
-          <a href="https://start.questrade.com/?oaa_promo=685817906487902&s_cid=RAF14_share_link_refer_a_friend_email&utm_medium=share_link&utm_source=refer_a_friend&utm_campaign=RAF14&utm_content=personalized_link"
-            target="_blank" rel="noopener noreferrer"
-            style={{flexShrink:0,display:"inline-block",padding:"10px 16px",background:"#e8173e",color:"#fff",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap"}}>
-            Open Questrade →
-          </a>
-        </div>
-        <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",marginBottom:12,textAlign:"left",border:"1px solid #f0f0f0"}}>
-          <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💬 Got feedback?</p>
-          <p style={{fontSize:11,color:"#6b7280",margin:"0 0 12px"}}>What's confusing? What's missing? What would make this more useful?</p>
-          <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback" 
-            style={{display:"inline-block",padding:"8px 16px",background:"#1d4ed8",color:"#fff",borderRadius:8,fontSize:12,fontWeight:600,textDecoration:"none"}}>
-            Send feedback
-          </a>
-        </div>
-        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>For illustrative purposes only. Not financial advice. Consult a licensed financial planner.</p>
-        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>🔒 Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
-        <p style={{fontSize:10,color:"#d1d5db",margin:0}}>
-          <a href="/privacy.html" style={{color:"#9ca3af",textDecoration:"underline"}}>Privacy Policy</a>
-          {" · "}© {new Date().getFullYear()} Vestly
-        </p>
-      </div>
+      {footer}
     </>;
   };
 
-  return(
-    <div style={{display:"flex",flexDirection:"column",minHeight:"100vh",fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#f8fafc"}}>
-
-      {/* ── Top nav ── */}
-      <div style={{background:"#fff",borderBottom:"1px solid #e5e7eb",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:32,height:32,background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,color:"#fff",fontWeight:700}}>V</div>
-          <div>
-            <p style={{fontSize:15,fontWeight:800,color:"#111827",margin:0,letterSpacing:"-0.02em"}}>Vestly</p>
-            <p style={{fontSize:10,color:"#9ca3af",margin:0}}>Canadian FIRE Calculator</p>
-          </div>
-        </div>
-        <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
-          {showSidebar?"✕ Close":"⚙ Edit Inputs"}
-        </button>
-      </div>
-
-
-
-      {/* ── Status bar ── */}
-      <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+  return <div style={{display:"flex",flexDirection:"column",minHeight:"100vh",fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#f8fafc"}}>
+    <div style={{background:"#fff",borderBottom:"1px solid #e5e7eb",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,color:"#fff",fontWeight:700}}>V</div>
         <div>
-          <p style={{fontSize:10,fontWeight:700,color:c.sc,textTransform:"uppercase",letterSpacing:"0.08em",margin:"0 0 2px"}}>FIRE Status</p>
-          <p style={{fontSize:20,fontWeight:900,color:c.sc,margin:0}}>{c.status}</p>
-        </div>
-        <div style={{textAlign:"right"}}>
-          <p style={{fontSize:12,color:c.sc,fontWeight:600,margin:"0 0 2px"}}>{c.gap>0?`${fmtS(c.gap)} behind`:`${fmtS(-c.gap)} ahead`}</p>
-          <p style={{fontSize:12,color:"#374151",margin:0}}>FIRE at age <strong style={{color:c.fireAge<=inp.retAge?"#059669":"#d97706"}}>{c.fireAge}{c.fireAge>inp.retAge?` (+${c.fireAge-inp.retAge}yr)`:c.fireAge<inp.retAge?` (${inp.retAge-c.fireAge}yr early!)`:""}</strong></p>
+          <p style={{fontSize:15,fontWeight:800,color:"#111827",margin:0,letterSpacing:"-0.02em"}}>Vestly</p>
+          <p style={{fontSize:10,color:"#9ca3af",margin:0}}>Canadian FIRE Calculator</p>
         </div>
       </div>
-
-      {/* ── Body ── */}
-      <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
-
-        {/* Sidebar — slide in on mobile, fixed on desktop */}
-        {showSidebar&&(
-          <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:40}} onClick={()=>setShowSidebar(false)}/>
-        )}
-        <div style={{
-          position:"fixed",top:0,bottom:0,left:0,
-          width:320,background:"#fff",zIndex:45,
-          transform:showSidebar?"translateX(0)":"translateX(-100%)",
-          transition:"transform 0.25s ease",
-          display:"flex",flexDirection:"column",
-          boxShadow:showSidebar?"4px 0 20px rgba(0,0,0,0.15)":"none",
-          overflowY:"auto",
-        }}>
-          <div style={{padding:"16px 16px 0",position:"sticky",top:0,background:"#fff",borderBottom:"1px solid #f0f0f0",zIndex:1}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-              <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Edit Your Numbers</p>
-              <button onClick={()=>setShowSidebar(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,paddingBottom:12}}>
-              {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"10px 8px",fontSize:12,fontWeight:600,borderRadius:8,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center",lineHeight:1.3}}>{t}</button>)}
-            </div>
-            <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
-              <span style={{fontSize:12,flexShrink:0}}>🔒</span>
-              <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
-            </div>
-          </div>
-          <div style={{padding:16,flex:1}}>{renderSidebar()}</div>
-        </div>
-
-        {/* Main dashboard */}
-        <div style={{flex:1,overflowY:"auto",padding:"12px 16px 24px",maxWidth:800,margin:"0 auto",width:"100%"}}>
-          {/* Dashboard tabs */}
-          <div style={{display:"flex",gap:4,marginBottom:14,background:"#f3f4f6",borderRadius:10,padding:4}}>
-            {DTABS.map((t,idx)=><button key={idx} onClick={()=>setDt(idx)} style={{flex:1,padding:"8px 4px",fontSize:12,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:dt===idx?"#fff":"transparent",color:dt===idx?"#111827":"#6b7280",boxShadow:dt===idx?"0 1px 3px rgba(0,0,0,0.1)":undefined,transition:"all 0.15s"}}>{t}</button>)}
-          </div>
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {renderDash()}
-          </div>
-        </div>
+      <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
+        {showSidebar?"✕ Close":"⚙ Edit Inputs"}
+      </button>
+    </div>
+    <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div>
+        <p style={{fontSize:10,fontWeight:700,color:c.sc,textTransform:"uppercase",letterSpacing:"0.08em",margin:"0 0 2px"}}>FIRE Status</p>
+        <p style={{fontSize:20,fontWeight:900,color:c.sc,margin:0}}>{c.status}</p>
+      </div>
+      <div style={{textAlign:"right"}}>
+        <p style={{fontSize:12,color:c.sc,fontWeight:600,margin:"0 0 2px"}}>{c.gap>0?`${fmtS(c.gap)} behind`:`${fmtS(-c.gap)} ahead`}</p>
+        <p style={{fontSize:12,color:"#374151",margin:0}}>FIRE at age <strong style={{color:c.fireAge<=inp.retAge?"#059669":"#d97706"}}>{c.fireAge}{c.fireAge>inp.retAge?` (+${c.fireAge-inp.retAge}yr)`:c.fireAge<inp.retAge?` (${inp.retAge-c.fireAge}yr early!)`:""}</strong></p>
       </div>
     </div>
-  );
+    <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
+      {showSidebar&&<div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:40}} onClick={()=>setShowSidebar(false)}/>}
+      <div style={{position:"fixed",top:0,bottom:0,left:0,width:320,background:"#fff",zIndex:45,transform:showSidebar?"translateX(0)":"translateX(-100%)",transition:"transform 0.25s ease",display:"flex",flexDirection:"column",boxShadow:showSidebar?"4px 0 20px rgba(0,0,0,0.15)":"none",overflowY:"auto"}}>
+        <div style={{padding:"16px 16px 0",position:"sticky",top:0,background:"#fff",borderBottom:"1px solid #f0f0f0",zIndex:1}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+            <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Edit Your Numbers</p>
+            <button onClick={()=>setShowSidebar(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,paddingBottom:12}}>
+            {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"10px 8px",fontSize:12,fontWeight:600,borderRadius:8,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center",lineHeight:1.3}}>{t}</button>)}
+          </div>
+          <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
+            <span style={{fontSize:12,flexShrink:0}}>🔒</span>
+            <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
+          </div>
+        </div>
+        <div style={{padding:16,flex:1}}>{renderSidebar()}</div>
+      </div>
+      <div style={{flex:1,overflowY:"auto",padding:"12px 16px 24px",maxWidth:800,margin:"0 auto",width:"100%"}}>
+        <div style={{display:"flex",gap:4,marginBottom:14,background:"#f3f4f6",borderRadius:10,padding:4}}>
+          {DTABS.map((t,idx)=><button key={idx} onClick={()=>setDt(idx)} style={{flex:1,padding:"8px 4px",fontSize:12,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:dt===idx?"#fff":"transparent",color:dt===idx?"#111827":"#6b7280",boxShadow:dt===idx?"0 1px 3px rgba(0,0,0,0.1)":undefined,transition:"all 0.15s"}}>{t}</button>)}
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>{renderDash()}</div>
+      </div>
+    </div>
+  </div>;
 }
