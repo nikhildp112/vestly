@@ -544,24 +544,6 @@ export default function App(){
         </button>
       </div>
 
-      {/* ── Testing banner ── */}
-      <div style={{background:"#7c3aed",padding:"8px 16px",display:"flex",alignItems:"center",gap:8}}>
-        <span style={{fontSize:12,flexShrink:0}}>⚠️</span>
-        <p style={{fontSize:11,color:"#fff",margin:0,lineHeight:1.4}}><strong>Testing Mode.</strong> Before public launch: own domain · privacy policy · legal review.</p>
-      </div>
-
-      {/* ── Status bar ── */}
-      <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div>
-          <p style={{fontSize:10,fontWeight:700,color:c.sc,textTransform:"uppercase",letterSpacing:"0.08em",margin:"0 0 2px"}}>FIRE Status</p>
-          <p style={{fontSize:20,fontWeight:900,color:c.sc,margin:0}}>{c.status}</p>
-        </div>
-        <div style={{textAlign:"right"}}>
-          <p style={{fontSize:12,color:c.sc,fontWeight:600,margin:"0 0 2px"}}>{c.gap>0?`${fmtS(c.gap)} behind`:`${fmtS(-c.gap)} ahead`}</p>
-          <p style={{fontSize:12,color:"#374151",margin:0}}>FIRE at age <strong style={{color:c.fireAge<=inp.retAge?"#059669":"#d97706"}}>{c.fireAge}{c.fireAge>inp.retAge?` (+${c.fireAge-inp.retAge}yr)`:c.fireAge<inp.retAge?` (${inp.retAge-c.fireAge}yr early!)`:""}</strong></p>
-        </div>
-      </div>
-
       {/* ── Body ── */}
       <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
 
