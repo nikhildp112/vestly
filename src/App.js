@@ -377,9 +377,9 @@ export default function App(){
           <span style={{fontSize:12,fontWeight:700,color:cl}}>{v}</span>
         </div>
       )}
-      <div style={{marginTop:12,padding:"12px 14px",background:"#eff6ff",borderRadius:8}}>
-        <p style={{fontSize:12,color:"#1e40af",margin:0}}>Every <strong>$1</strong> at {inp.ret}% over {c.n} years becomes <strong>${c.mult.toFixed(2)}</strong>. That's compounding.</p>
-      </div>
+      {c.mult>0&&<div style={{marginTop:12,padding:"12px 14px",background:"#eff6ff",borderRadius:8}}>
+        <p style={{fontSize:12,color:"#1e40af",margin:0}}>Every <strong>$1</strong> you invest at {inp.ret}% over {c.n} years becomes <strong>${c.mult.toFixed(2)}</strong>. That's compounding.</p>
+      </div>}
     </>;
 
     if(dt===2) return <>
