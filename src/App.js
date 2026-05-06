@@ -518,7 +518,11 @@ export default function App(){
       </div>
       <div style={{textAlign:"center",padding:"8px 0 16px"}}>
         <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>For illustrative purposes only. Not financial advice. Consult a licensed financial planner.</p>
-        <p style={{fontSize:10,color:"#d1d5db",margin:0}}>🔒 All data calculated locally in your browser. Nothing stored or shared.</p>
+        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>🔒 Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
+        <p style={{fontSize:10,color:"#d1d5db",margin:0}}>
+          <a href="/privacy.html" style={{color:"#9ca3af",textDecoration:"underline"}}>Privacy Policy</a>
+          {" · "}© {new Date().getFullYear()} Vestly
+        </p>
       </div>
     </>;
   };
@@ -538,7 +542,13 @@ export default function App(){
         <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
           {showSidebar?"✕ Close":"⚙ Edit Inputs"}
         </button>
-      </div>      
+      </div>
+
+      {/* ── Testing banner ── */}
+      <div style={{background:"#7c3aed",padding:"8px 16px",display:"flex",alignItems:"center",gap:8}}>
+        <span style={{fontSize:12,flexShrink:0}}>⚠️</span>
+        <p style={{fontSize:11,color:"#fff",margin:0,lineHeight:1.4}}><strong>Testing Mode.</strong> Before public launch: own domain · privacy policy · legal review.</p>
+      </div>
 
       {/* ── Status bar ── */}
       <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
