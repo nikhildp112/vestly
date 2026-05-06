@@ -542,7 +542,7 @@ export default function App(){
         <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
           {showSidebar?"✕ Close":"⚙ Edit Inputs"}
         </button>
-      </div>
+      </div>    
 
       {/* ── Body ── */}
       <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
@@ -570,7 +570,7 @@ export default function App(){
             </div>
             <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
               <span style={{fontSize:12,flexShrink:0}}>🔒</span>
-              <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}><strong>Your data never leaves your browser.</strong> Nothing stored or visible to anyone — including the creator.</p>
+              <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
             </div>
           </div>
           <div style={{padding:16,flex:1}}>{renderSidebar()}</div>
