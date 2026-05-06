@@ -528,7 +528,18 @@ export default function App(){
             </a>
           </div>
         </div>
-        {/* Feedback */}
+        {/* Questrade referral */}
+        <div style={{background:"#fff",borderRadius:12,padding:"16px 20px",marginBottom:12,border:"1px solid #e5e7eb",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+          <div>
+            <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 3px"}}>Ready to start investing?</p>
+            <p style={{fontSize:11,color:"#6b7280",margin:0}}>Open a Questrade account and get <strong style={{color:"#059669"}}>$50 in free trades</strong> to get started.</p>
+          </div>
+          <a href="https://start.questrade.com/?oaa_promo=685817906487902&s_cid=RAF14_share_link_refer_a_friend_email&utm_medium=share_link&utm_source=refer_a_friend&utm_campaign=RAF14&utm_content=personalized_link"
+            target="_blank" rel="noopener noreferrer"
+            style={{flexShrink:0,display:"inline-block",padding:"10px 16px",background:"#e8173e",color:"#fff",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap"}}>
+            Open Questrade →
+          </a>
+        </div>
         <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",marginBottom:12,textAlign:"left",border:"1px solid #f0f0f0"}}>
           <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💬 Got feedback?</p>
           <p style={{fontSize:11,color:"#6b7280",margin:"0 0 12px"}}>What's confusing? What's missing? What would make this more useful?</p>
