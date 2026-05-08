@@ -11,13 +11,12 @@ const fmtS = n => {
 };
 
 const PROVINCES=["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"];
-const STABS=["About You","Income & Savings","Assets & Debts","Learn"];
+const STABS=["1. About You","2. Income & Savings","3. Assets & Debts","4. Assumptions","Learn"];
 const DTABS=["Overview","Contributions","Retirement"];
 
 const DEF={
   age:30,retAge:55,province:"ON",life:90,
-  income:0,incGrowth:2,
-  expenses:0,
+  income:0,incGrowth:2,expenses:0,
   homeVal:0,homeApp:4,
   tfsa:0,rrsp:0,nonReg:0,cash:0,
   mTFSA:0,mRRSP:0,mOther:0,mMatch:0,
@@ -66,9 +65,12 @@ export default function App(){
   const [inp,setInp]=useState(DEF);
   const [st,setSt]=useState(0);
   const [dt,setDt]=useState(0);
-  const [showSidebar,setShowSidebar]=useState(false);
+  const [show,setShow]=useState(false);
+
   const set=k=>e=>setInp(p=>({...p,[k]:parseFloat(e.target.value)||0}));
+  const setN=k=>e=>setInp(p=>({...p,[k]:Number(e.target.value)}));
   const setS=k=>e=>setInp(p=>({...p,[k]:e.target.value}));
+  const focus=k=>e=>{if(parseFloat(e.target.value)===0)e.target.select();};
 
   const c=useMemo(()=>{
     const r=inp.ret/100,infR=inp.inf/100,swrR=inp.swr/100,g=inp.incGrowth/100;
@@ -158,37 +160,43 @@ export default function App(){
     return{fireNum,nw,projNW,ideal,gap,gapPct,cAlone,status,sc,sbg,sb,savR,fireAge,n,cpp,oas,portNeed,mre,extra,delay,spendCut,ann,cFV,g,projHome,debtPmt,mPort,mCPP,mOAS,totInc,surplus,portSurplus,portLasts,projRESP,totCESG,lifeCESG,y18,maxCESG,optRESP,futPrin,totPrin,gains,mult,contData,chart};
   },[inp]);
 
-  const card=(label,value,sub,color="#1d4ed8",bg="#fff")=>(
-    <div style={{background:bg,borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-      <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",margin:"0 0 4px"}}>{label}</p>
-      <p style={{fontSize:18,fontWeight:800,color,margin:"0 0 2px"}}>{value}</p>
-      {sub&&<p style={{fontSize:10,color:"#9ca3af",margin:0}}>{sub}</p>}
-    </div>
-  );
-
-  const inp2=(label,key,opts={})=>(
+  const F=({label,k,opts={}})=>(
     <div style={{marginBottom:14}}>
       <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>{label}</label>
       <div style={{display:"flex",alignItems:"center",background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:8,overflow:"hidden"}}>
         {opts.pre&&<span style={{padding:"11px 13px",color:"#9ca3af",fontSize:14,background:"#f3f4f6",borderRight:"1px solid #e5e7eb"}}>{opts.pre}</span>}
-        <input type="number" value={inp[key]} onChange={set(key)} step={opts.step||1} min={opts.min||0} max={opts.max} style={{flex:1,padding:"11px 13px",border:"none",background:"transparent",outline:"none",fontSize:15,color:"#111827"}}/>
+        <input type="number" value={inp[k]} onChange={set(k)} onFocus={focus(k)} step={opts.step||1} min={opts.min!=null?opts.min:0} max={opts.max}
+          style={{flex:1,padding:"11px 13px",border:"none",background:"transparent",outline:"none",fontSize:15,color:"#111827"}}/>
         {opts.suf&&<span style={{padding:"11px 13px",color:"#9ca3af",fontSize:14,background:"#f3f4f6",borderLeft:"1px solid #e5e7eb"}}>{opts.suf}</span>}
       </div>
       {opts.hint&&<p style={{fontSize:11,color:"#9ca3af",marginTop:5,marginBottom:0,lineHeight:1.4}}>{opts.hint}</p>}
     </div>
   );
 
-  const sldr=(label,key,min,max,step=0.5,suf="")=>(
+  const SL=({label,k,min,max,step=0.5,suf="",hint=""})=>(
     <div style={{marginBottom:18}}>
-      <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
         <span style={{fontSize:14,color:"#374151",fontWeight:500}}>{label}</span>
-        <span style={{fontSize:15,color:"#1d4ed8",fontWeight:700}}>{inp[key]}{suf}</span>
+        <span style={{fontSize:15,color:"#1d4ed8",fontWeight:700}}>{inp[k]}{suf}</span>
       </div>
-      <input type="range" min={min} max={max} step={step} value={inp[key]} onChange={set(key)} style={{width:"100%",accentColor:"#1d4ed8",height:4}}/>
+      <input type="range" min={min} max={max} step={step} value={inp[k]}
+        onChange={e=>setInp(p=>({...p,[k]:Number(e.target.value)}))}
+        style={{width:"100%",accentColor:"#1d4ed8",height:6,cursor:"pointer"}}/>
+      <div style={{display:"flex",justifyContent:"space-between",marginTop:2,marginBottom:hint?4:0}}>
+        <span style={{fontSize:10,color:"#9ca3af"}}>{min}{suf}</span>
+        <span style={{fontSize:10,color:"#9ca3af"}}>{max}{suf}</span>
+      </div>
+      {hint&&<p style={{fontSize:10,color:"#9ca3af",margin:0,lineHeight:1.4}}>{hint}</p>}
     </div>
   );
 
   const sec=t=><p style={{fontSize:11,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.07em",margin:"18px 0 10px",borderBottom:"1px solid #f3f4f6",paddingBottom:6}}>{t}</p>;
+
+  const nextBtn=(nextIdx)=>(
+    <button onClick={()=>setSt(nextIdx)} style={{width:"100%",marginTop:20,padding:"13px",background:"#1d4ed8",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+      Next → {STABS[nextIdx]}
+    </button>
+  );
 
   const TTip=({active,payload,label})=>{
     if(!active||!payload?.length) return null;
@@ -201,38 +209,27 @@ export default function App(){
     </div>;
   };
 
-  const renderSidebar=()=>{
+  const sidebar=()=>{
     if(st===0) return <>
-      {sec("Personal")}
-      {inp2("Current Age","age",{suf:"yrs",min:18,max:80})}
-      {inp2("Target Retirement Age","retAge",{suf:"yrs",min:40,max:80})}
-      {inp2("Life Expectancy","life",{suf:"yrs",min:70,max:100})}
+      {sec("Personal Info")}
+      <F label="Current Age" k="age" opts={{suf:"yrs",min:18,max:80}}/>
+      <F label="Target Retirement Age" k="retAge" opts={{suf:"yrs",min:40,max:80}}/>
+      <F label="Life Expectancy" k="life" opts={{suf:"yrs",min:70,max:100}}/>
       <div style={{marginBottom:14}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b7280",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Province</label>
         <select value={inp.province} onChange={setS("province")} style={{width:"100%",padding:"11px 13px",background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:8,fontSize:14,color:"#111827",outline:"none"}}>
           {PROVINCES.map(p=><option key={p}>{p}</option>)}
         </select>
       </div>
-      {sec("Model Assumptions")}
-      {sldr("Expected Annual Return","ret",3,12,0.5,"%")}
-      {sldr("Inflation Rate","inf",1,6,0.5,"%")}
-      {sldr("Safe Withdrawal Rate","swr",2,6,0.25,"%")}
-      {sldr("Home Appreciation Rate","homeApp",1,8,0.5,"%")}
-      <div style={{padding:12,background:"#f9fafb",borderRadius:8,border:"1px solid #f0f0f0",marginTop:4}}>
-        <p style={{fontSize:11,fontWeight:700,color:"#374151",margin:"0 0 8px"}}>Est. Government Benefits</p>
-        {[["CPP (annual)",c.cpp],["OAS (annual)",c.oas]].map(([l,v])=><div key={l} style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
-          <span style={{fontSize:12,color:"#6b7280"}}>{l}</span>
-          <span style={{fontSize:12,fontWeight:700,color:"#059669"}}>+{fmt(v)}</span>
-        </div>)}
-        <p style={{fontSize:10,color:"#9ca3af",margin:"6px 0 0"}}>CPP ~70% of max for {Math.min(Math.max(inp.retAge-22,0),39)} yrs. OAS at 65+.</p>
-      </div>
+      {nextBtn(1)}
     </>;
+
     if(st===1) return <>
       {sec("Income")}
-      {inp2("Gross Annual Income","income",{pre:"$",step:1000})}
-      {inp2("Annual Income Growth Rate","incGrowth",{suf:"%",step:0.5,hint:`Contributions grow at this rate yearly → FV: ${fmtS(c.cFV)}`})}
+      <F label="Gross Annual Income" k="income" opts={{pre:"$",step:1000}}/>
+      <F label="Annual Income Growth Rate" k="incGrowth" opts={{suf:"%",step:0.5,hint:`Contributions grow at this rate yearly → FV: ${fmtS(c.cFV)}`}}/>
       {sec("Expenses")}
-      {inp2("Total Monthly Expenses","expenses",{pre:"$",step:100,hint:"Include mortgage + all lifestyle costs"})}
+      <F label="Total Monthly Expenses" k="expenses" opts={{pre:"$",step:100,hint:"Include mortgage + all lifestyle costs"}}/>
       <div style={{padding:"12px 14px",background:"#f0f9ff",borderRadius:8,border:"1px solid #bae6fd",marginBottom:12}}>
         <p style={{fontSize:10,fontWeight:700,color:"#0369a1",textTransform:"uppercase",margin:"0 0 8px"}}>Retirement Monthly Expenses</p>
         {[["Today's expenses",fmt(inp.expenses),"#374151"],["− Mortgage paid off","− "+fmt(c.debtPmt),"#059669"],["× inflation factor","× "+Math.pow(1+inp.inf/100,c.n).toFixed(2),"#6b7280"]].map(([l,v,cl])=>
@@ -243,41 +240,61 @@ export default function App(){
           <span style={{fontSize:15,fontWeight:800,color:"#1d4ed8"}}>{fmt(c.mre)}/mo</span>
         </div>
       </div>
-      {sec("FIRE Contributions")}
-      {inp2("Monthly TFSA","mTFSA",{pre:"$",step:50})}
-      {inp2("Monthly RRSP","mRRSP",{pre:"$",step:50})}
-      {inp2("Monthly Other Investments","mOther",{pre:"$",step:50})}
-      {inp2("Employer Match (monthly)","mMatch",{pre:"$",step:50})}
+      {sec("Monthly FIRE Contributions")}
+      <F label="Monthly TFSA" k="mTFSA" opts={{pre:"$",step:50}}/>
+      <F label="Monthly RRSP" k="mRRSP" opts={{pre:"$",step:50}}/>
+      <F label="Monthly Other Investments" k="mOther" opts={{pre:"$",step:50}}/>
+      <F label="Employer Match (monthly)" k="mMatch" opts={{pre:"$",step:50}}/>
       {sec("RESP — Education Savings")}
-      {inp2("Number of Children","kids",{min:0,max:8})}
-      {inp2("Youngest Child's Age","kidAge",{suf:"yrs",min:0,max:17})}
-      {inp2("Monthly RESP Contribution","mRESP",{pre:"$",step:25,hint:`$${c.optRESP}/mo maximizes the $500/yr CESG grant`})}
-      {inp.kids>0&&<div style={{padding:"10px 12px",background:c.maxCESG?"#ecfdf5":"#fffbeb",borderRadius:8,border:`1px solid ${c.maxCESG?"#6ee7b7":"#fcd34d"}`}}>
+      <F label="Number of Children" k="kids" opts={{min:0,max:8}}/>
+      <F label="Youngest Child's Age" k="kidAge" opts={{suf:"yrs",min:0,max:17}}/>
+      <F label="Monthly RESP Contribution" k="mRESP" opts={{pre:"$",step:25,hint:`$${c.optRESP}/mo maximizes the $500/yr CESG grant`}}/>
+      {inp.kids>0&&<div style={{padding:"10px 12px",background:c.maxCESG?"#ecfdf5":"#fffbeb",borderRadius:8,border:`1px solid ${c.maxCESG?"#6ee7b7":"#fcd34d"}`,marginBottom:10}}>
         <p style={{fontSize:11,fontWeight:600,color:c.maxCESG?"#065f46":"#92400e",margin:0}}>
           {c.maxCESG?"✓ CESG maximized — $500/yr per child":`Contribute $${c.optRESP}/mo to unlock full CESG`}
         </p>
       </div>}
+      {nextBtn(2)}
     </>;
+
     if(st===2) return <>
       {sec("Home")}
-      {inp2("Current Home Value","homeVal",{pre:"$",step:5000,hint:`Projected at age ${inp.retAge}: ${fmtS(c.projHome)} (mortgage-free)`})}
+      <F label="Current Home Value" k="homeVal" opts={{pre:"$",step:5000,hint:`Projected at age ${inp.retAge}: ${fmtS(c.projHome)} (mortgage-free)`}}/>
       <div style={{padding:"10px 12px",background:"#fafaf9",borderRadius:8,border:"1px solid #e7e5e4",marginBottom:12}}>
         <p style={{fontSize:11,color:"#6b7280",margin:0}}>Staying in home — equity not in FIRE portfolio. Mortgage payoff saves {fmt(c.debtPmt)}/mo in retirement.</p>
       </div>
       {sec("Investment Accounts")}
-      {inp2("TFSA Balance","tfsa",{pre:"$",step:1000})}
-      {inp2("RRSP Balance","rrsp",{pre:"$",step:1000})}
-      {inp2("Non-Registered Investments","nonReg",{pre:"$",step:1000})}
-      {inp2("Cash Savings","cash",{pre:"$",step:1000})}
+      <F label="TFSA Balance" k="tfsa" opts={{pre:"$",step:1000}}/>
+      <F label="RRSP Balance" k="rrsp" opts={{pre:"$",step:1000}}/>
+      <F label="Non-Registered Investments" k="nonReg" opts={{pre:"$",step:1000}}/>
+      <F label="Cash Savings" k="cash" opts={{pre:"$",step:1000}}/>
       {sec("RESP Balance")}
-      {inp2("Current RESP Balance","respBal",{pre:"$",step:1000})}
+      <F label="Current RESP Balance" k="respBal" opts={{pre:"$",step:1000}}/>
       {sec("Liabilities")}
-      {inp2("Mortgage Balance","mortBal",{pre:"$",step:5000})}
-      {inp2("Mortgage Rate","mortRate",{suf:"%",step:0.1})}
-      {inp2("Monthly Mortgage Payment","mMort",{pre:"$",step:100,hint:"Subtracted from retirement expense base"})}
-      {inp2("Other Debt Balance","otherDebt",{pre:"$",step:1000})}
-      {inp2("Other Monthly Debt Payments","mOtherDebt",{pre:"$",step:50})}
+      <F label="Mortgage Balance" k="mortBal" opts={{pre:"$",step:5000}}/>
+      <F label="Mortgage Rate" k="mortRate" opts={{suf:"%",step:0.1,min:0}}/>
+      <F label="Monthly Mortgage Payment" k="mMort" opts={{pre:"$",step:100,hint:"Subtracted from retirement expense base"}}/>
+      <F label="Other Debt Balance" k="otherDebt" opts={{pre:"$",step:1000}}/>
+      <F label="Other Monthly Debt Payments" k="mOtherDebt" opts={{pre:"$",step:50}}/>
+      {nextBtn(3)}
     </>;
+
+    if(st===3) return <>
+      {sec("Model Assumptions")}
+      <SL label="Expected Annual Return" k="ret" min={0} max={15} step={0.5} suf="%" hint="The average yearly growth you expect from your investments. A diversified index fund portfolio has historically returned 7–10%. Be conservative — use 6–7% for planning."/>
+      <SL label="Inflation Rate" k="inf" min={0} max={8} step={0.5} suf="%" hint="How much prices rise each year. At 3%, something that costs $100 today costs $134 in 10 years. The calculator inflates your retirement expenses automatically."/>
+      <SL label="Safe Withdrawal Rate" k="swr" min={0} max={8} step={0.25} suf="%" hint="The % of your portfolio you withdraw each year in retirement. The '4% rule' means you need 25× your annual spending. Lower = safer but requires more savings."/>
+      <SL label="Home Appreciation Rate" k="homeApp" min={0} max={10} step={0.5} suf="%" hint="The annual rate your home's value grows. Canadian real estate has historically appreciated ~4% per year on average, though this varies widely by city."/>
+      <div style={{padding:12,background:"#f9fafb",borderRadius:8,border:"1px solid #f0f0f0",marginTop:4}}>
+        <p style={{fontSize:11,fontWeight:700,color:"#374151",margin:"0 0 8px"}}>Est. Government Benefits</p>
+        {[["CPP (annual)",c.cpp],["OAS (annual)",c.oas]].map(([l,v])=><div key={l} style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+          <span style={{fontSize:12,color:"#6b7280"}}>{l}</span>
+          <span style={{fontSize:12,fontWeight:700,color:"#059669"}}>+{fmt(v)}</span>
+        </div>)}
+        <p style={{fontSize:10,color:"#9ca3af",margin:"6px 0 0"}}>CPP ~70% of max for {Math.min(Math.max(inp.retAge-22,0),39)} yrs. OAS (Old Age Security) is a flat govt benefit paid to most Canadians at 65 — ~$8,784/yr regardless of work history.</p>
+      </div>
+    </>;
+
     return <div>
       <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>📖 FIRE Glossary</p>
       <p style={{fontSize:12,color:"#9ca3af",margin:"0 0 16px"}}>Plain-English definitions. No jargon.</p>
@@ -293,65 +310,76 @@ export default function App(){
     </div>;
   };
 
+  const [tip,setTip]=useState(null);
   const progPct=Math.min((c.nw/c.fireNum)*100,100);
+  const TIPS={
+    ideal:"How much you'd need invested RIGHT NOW — given your future contributions — to hit your FIRE number exactly at retirement. If $0, your contributions alone already cover it.",
+    gap:"The difference between your ideal portfolio today vs what you actually have. Positive (red) = behind the ideal path. Negative (green) = ahead.",
+  };
+  const Tip=({id})=>(
+    <span style={{position:"relative",display:"inline-flex",alignItems:"center",marginLeft:5}}>
+      <button onMouseEnter={()=>setTip(id)} onMouseLeave={()=>setTip(null)}
+        style={{width:14,height:14,borderRadius:"50%",border:"none",background:"#e5e7eb",color:"#6b7280",fontSize:9,fontWeight:700,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",padding:0,lineHeight:1,flexShrink:0}}>i</button>
+      {tip===id&&<div style={{position:"absolute",bottom:"calc(100% + 8px)",left:0,width:240,background:"#1e293b",color:"#f1f5f9",fontSize:11,lineHeight:1.6,padding:"10px 12px",borderRadius:8,boxShadow:"0 4px 16px rgba(0,0,0,.3)",zIndex:9999,pointerEvents:"none"}}>
+        {TIPS[id]}
+        <div style={{position:"absolute",top:"100%",left:10,width:0,height:0,borderLeft:"5px solid transparent",borderRight:"5px solid transparent",borderTop:"5px solid #1e293b"}}/>
+      </div>}
+    </span>
+  );
   const ahead=c.projNW>=c.fireNum;
 
-  const footer=(
-    <div style={{display:"flex",flexDirection:"column",gap:12,marginTop:4}}>
-      {/* Subscribe */}
-      <div style={{background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:12,padding:"20px 24px"}}>
-        <p style={{fontSize:14,fontWeight:700,color:"#fff",margin:"0 0 4px"}}>Get monthly Canadian FIRE insights</p>
-        <p style={{fontSize:11,color:"rgba(255,255,255,0.8)",margin:"0 0 14px"}}>Real numbers. Real strategies. No fluff. Unsubscribe anytime.</p>
-        <a href="https://vestly.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer"
-          style={{display:"inline-block",padding:"10px 20px",background:"#fff",color:"#1d4ed8",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none"}}>
-          Subscribe — it's free
-        </a>
-      </div>
-      {/* Questrade */}
-      <div style={{background:"#fff",borderRadius:12,padding:"16px 20px",border:"1px solid #e5e7eb",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
-        <div>
-          <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 3px"}}>Ready to start investing?</p>
-          <p style={{fontSize:11,color:"#6b7280",margin:0}}>Open a Questrade account and get <strong style={{color:"#059669"}}>$50 in free trades</strong> to get started.</p>
-        </div>
-        <a href="https://start.questrade.com/?oaa_promo=685817906487902&s_cid=RAF14_share_link_refer_a_friend_email&utm_medium=share_link&utm_source=refer_a_friend&utm_campaign=RAF14&utm_content=personalized_link"
-          target="_blank" rel="noopener noreferrer"
-          style={{flexShrink:0,display:"inline-block",padding:"10px 16px",background:"#e8173e",color:"#fff",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap"}}>
-          Open Questrade →
-        </a>
-      </div>
-      {/* Built by */}
-      <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
-        <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 6px"}}>👋 Built by Nikhil</p>
-        <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>A Canadian DIY investor based in Ontario. I built Vestly because I couldn't find a single calculator that understood the Canadian picture — TFSA, RRSP, CPP, OAS, mortgage payoff, all of it together. So I built one. It's free, your data never leaves your browser, and I'm still improving it. <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback" style={{color:"#1d4ed8"}}>Send me your feedback →</a></p>
-      </div>
-      {/* Feedback */}
-      <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
-        <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💬 Got feedback?</p>
-        <p style={{fontSize:11,color:"#6b7280",margin:"0 0 12px"}}>What's confusing? What's missing? What would make this more useful?</p>
-        <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback"
-          style={{display:"inline-block",padding:"8px 16px",background:"#1d4ed8",color:"#fff",borderRadius:8,fontSize:12,fontWeight:600,textDecoration:"none"}}>
-          Send feedback
-        </a>
-      </div>
-      {/* Legal footer */}
-      <div style={{textAlign:"center",padding:"4px 0 8px"}}>
-        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>For illustrative purposes only. Not financial advice. Consult a licensed financial planner.</p>
-        <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>🔒 Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
-        <p style={{fontSize:10,color:"#d1d5db",margin:0}}>
-          <a href="/privacy.html" style={{color:"#9ca3af",textDecoration:"underline"}}>Privacy Policy</a>
-          {" · "}© {new Date().getFullYear()} Vestly
-        </p>
-      </div>
+  const footer=<div style={{display:"flex",flexDirection:"column",gap:12,marginTop:4}}>
+    <div style={{background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:12,padding:"20px 24px"}}>
+      <p style={{fontSize:14,fontWeight:700,color:"#fff",margin:"0 0 4px"}}>Get monthly Canadian FIRE insights</p>
+      <p style={{fontSize:11,color:"rgba(255,255,255,0.8)",margin:"0 0 14px"}}>Real numbers. Real strategies. No fluff. Unsubscribe anytime.</p>
+      <a href="https://vestly.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer"
+        style={{display:"inline-block",padding:"10px 20px",background:"#fff",color:"#1d4ed8",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none"}}>
+        Subscribe — it's free
+      </a>
     </div>
-  );
+    <div style={{background:"#fff",borderRadius:12,padding:"16px 20px",border:"1px solid #e5e7eb",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+      <div>
+        <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 3px"}}>Ready to start investing?</p>
+        <p style={{fontSize:11,color:"#6b7280",margin:0}}>Open a Questrade account and get <strong style={{color:"#059669"}}>$50 in free trades</strong>.</p>
+      </div>
+      <a href="https://start.questrade.com/?oaa_promo=685817906487902&s_cid=RAF14_share_link_refer_a_friend_email&utm_medium=share_link&utm_source=refer_a_friend&utm_campaign=RAF14&utm_content=personalized_link"
+        target="_blank" rel="noopener noreferrer"
+        style={{flexShrink:0,display:"inline-block",padding:"10px 16px",background:"#e8173e",color:"#fff",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none",whiteSpace:"nowrap"}}>
+        Open Questrade →
+      </a>
+    </div>
+    <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
+      <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 6px"}}>👋 Built by Nikhil</p>
+      <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>A Canadian DIY investor based in Ontario. I built Vestly because I couldn't find a single calculator that understood the Canadian picture — TFSA, RRSP, CPP, OAS, mortgage payoff, all of it together. So I built one. It's free, your data never leaves your browser, and I'm still improving it. <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback" style={{color:"#1d4ed8"}}>Send me your feedback →</a></p>
+    </div>
+    <div style={{background:"#f9fafb",borderRadius:12,padding:"16px 20px",border:"1px solid #f0f0f0"}}>
+      <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💬 Got feedback?</p>
+      <p style={{fontSize:11,color:"#6b7280",margin:"0 0 12px"}}>What's confusing? What's missing? What would make this more useful?</p>
+      <a href="mailto:privacy@getvestly.ca?subject=Vestly Feedback"
+        style={{display:"inline-block",padding:"8px 16px",background:"#1d4ed8",color:"#fff",borderRadius:8,fontSize:12,fontWeight:600,textDecoration:"none"}}>
+        Send feedback
+      </a>
+    </div>
+    <div style={{textAlign:"center",padding:"4px 0 8px"}}>
+      <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>For illustrative purposes only. Not financial advice. Consult a licensed financial planner.</p>
+      <p style={{fontSize:10,color:"#d1d5db",margin:"0 0 4px"}}>🔒 Your financial data is calculated locally in your browser and never stored or shared.</p>
+      <p style={{fontSize:10,color:"#d1d5db",margin:0}}>
+        <a href="/privacy.html" style={{color:"#9ca3af",textDecoration:"underline"}}>Privacy Policy</a>
+        {" · "}© {new Date().getFullYear()} Vestly
+      </p>
+    </div>
+  </div>;
 
-  const renderDash=()=>{
+  const dash=()=>{
     if(dt===1) return <>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {card("Already Invested",fmtS(c.nw),"Current balances","#1d4ed8")}
-        {card("Future Contributions",fmtS(c.futPrin),`Cash over ${c.n} yrs`,"#7c3aed")}
-        {card("Total Principal",fmtS(c.totPrin),"No growth","#374151")}
-        {card("Market Gains",fmtS(c.gains),`${c.mult.toFixed(2)}× your money`,"#059669",c.gains>0?"#f0fdf4":"#fff")}
+        {[["Already Invested",fmtS(c.nw),"Current balances","#1d4ed8"],["Future Contributions",fmtS(c.futPrin),`Cash over ${c.n} yrs`,"#7c3aed"],["Total Principal",fmtS(c.totPrin),"No growth","#374151"],["Market Gains",fmtS(c.gains),`${c.mult.toFixed(2)}× your money`,"#059669"]].map(([l,v,s,cl])=>
+          <div key={l} style={{background:cl==="#059669"&&c.gains>0?"#f0fdf4":"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
+            <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 4px"}}>{l}</p>
+            <p style={{fontSize:18,fontWeight:800,color:cl,margin:"0 0 2px"}}>{v}</p>
+            <p style={{fontSize:10,color:"#9ca3af",margin:0}}>{s}</p>
+          </div>
+        )}
       </div>
       <div style={{background:"#fff",borderRadius:10,padding:14,border:"1px solid #f0f0f0"}}>
         <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>What You Put In vs What It Becomes</p>
@@ -384,14 +412,17 @@ export default function App(){
 
     if(dt===2) return <>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {card("Portfolio at Retirement",fmtS(c.projNW),`Age ${inp.retAge} · ${inp.ret}% return`,c.projNW>=c.fireNum?"#059669":"#dc2626")}
-        {card("FIRE Number",fmtS(c.fireNum),"What you need","#7c3aed")}
-        {card(c.portSurplus>=0?"Surplus":"Shortfall",fmtS(Math.abs(c.portSurplus)),c.portSurplus>=0?"Above target":"Below target",c.portSurplus>=0?"#059669":"#dc2626")}
-        {card("Home Value",fmtS(c.projHome),"Mortgage-free","#78716c")}
+        {[["Portfolio at Retirement",fmtS(c.projNW),`Age ${inp.retAge} · ${inp.ret}% return`,c.projNW>=c.fireNum?"#059669":"#dc2626"],["FIRE Number",fmtS(c.fireNum),"What you need","#7c3aed"],[c.portSurplus>=0?"Surplus":"Shortfall",fmtS(Math.abs(c.portSurplus)),c.portSurplus>=0?"Above target":"Below target",c.portSurplus>=0?"#059669":"#dc2626"],["Home Value",fmtS(c.projHome),"Mortgage-free","#78716c"]].map(([l,v,s,cl])=>
+          <div key={l} style={{background:"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
+            <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 4px"}}>{l}</p>
+            <p style={{fontSize:18,fontWeight:800,color:cl,margin:"0 0 2px"}}>{v}</p>
+            <p style={{fontSize:10,color:"#9ca3af",margin:0}}>{s}</p>
+          </div>
+        )}
       </div>
       <div style={{background:"#fff",borderRadius:10,padding:14,border:"1px solid #f0f0f0"}}>
         <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 12px"}}>Monthly Income at Retirement</p>
-        {[["From portfolio (SWR "+inp.swr+"%)",c.mPort,"#1d4ed8"],["CPP (govt pension)",c.mCPP,"#059669"],["OAS (govt benefit)",c.mOAS,"#059669"]].map(([l,v,cl])=>
+                  {[["From portfolio (SWR "+inp.swr+"%)",c.mPort,"#1d4ed8"],["CPP (Canada Pension Plan)",c.mCPP,"#059669"],["OAS (Old Age Security)",c.mOAS,"#059669"]].map(([l,v,cl])=>
           <div key={l} style={{marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
               <span style={{fontSize:12,color:"#6b7280"}}>{l}</span>
@@ -402,16 +433,15 @@ export default function App(){
             </div>
           </div>
         )}
-        <div style={{borderTop:"2px solid #e5e7eb",paddingTop:10,display:"flex",justifyContent:"space-between"}}>
-          <span style={{fontSize:13,fontWeight:700}}>Total monthly income</span>
-          <span style={{fontSize:15,fontWeight:800,color:"#1d4ed8"}}>{fmt(c.totInc)}</span>
-        </div>
+        <p style={{fontSize:10,color:"#9ca3af",margin:"8px 0 0",lineHeight:1.5}}>
+          <strong style={{color:"#374151"}}>CPP</strong> — Canada Pension Plan. Earned through work contributions, available from age 60. <strong style={{color:"#374151"}}>OAS</strong> — Old Age Security. A flat government benefit paid to most Canadians at age 65 (~$8,784/yr), regardless of work history. Retiring before 65 means $0 OAS until you turn 65.
+        </p>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
         <div style={{padding:"12px 14px",background:c.surplus>=0?"#ecfdf5":"#fef2f2",borderRadius:10,border:`1px solid ${c.surplus>=0?"#6ee7b7":"#fca5a5"}`}}>
           <p style={{fontSize:10,fontWeight:700,color:c.surplus>=0?"#065f46":"#991b1b",textTransform:"uppercase",margin:"0 0 4px"}}>Monthly {c.surplus>=0?"surplus":"shortfall"}</p>
           <p style={{fontSize:20,fontWeight:900,color:c.surplus>=0?"#059669":"#dc2626",margin:"0 0 2px"}}>{fmt(Math.abs(c.surplus))}</p>
-          <p style={{fontSize:10,color:c.surplus>=0?"#15803d":"#b91c1c",margin:0,lineHeight:1.4}}>{c.surplus>=0?"Income exceeds expenses":"Expenses exceed income"}</p>
+          <p style={{fontSize:10,color:c.surplus>=0?"#15803d":"#b91c1c",margin:0}}>{c.surplus>=0?"Income exceeds expenses":"Expenses exceed income"}</p>
         </div>
         <div style={{padding:"12px 14px",background:"#f9fafb",borderRadius:10,border:"1px solid #f0f0f0"}}>
           <p style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",margin:"0 0 4px"}}>Portfolio lasts until</p>
@@ -424,7 +454,7 @@ export default function App(){
         {[["Investment portfolio",fmt(c.projNW),"#1d4ed8","TFSA + RRSP + non-reg"],["Home (paid off)",fmt(c.projHome),"#78716c","Not in FIRE portfolio"],["RESP (education)",fmt(c.projRESP),"#059669","Earmarked for children"],["FIRE number needed",fmt(c.fireNum),"#7c3aed","To sustain retirement"],[c.portSurplus>=0?"Surplus":"Shortfall",(c.portSurplus>=0?"+":"")+fmt(c.portSurplus),c.portSurplus>=0?"#059669":"#dc2626","vs FIRE number"]].map(([l,v,cl,note])=>
           <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid #f3f4f6"}}>
             <div><p style={{fontSize:12,color:"#374151",margin:"0 0 1px",fontWeight:500}}>{l}</p><p style={{fontSize:10,color:"#9ca3af",margin:0}}>{note}</p></div>
-            <span style={{fontSize:13,fontWeight:700,color:cl,marginLeft:8,textAlign:"right"}}>{v}</span>
+            <span style={{fontSize:13,fontWeight:700,color:cl,marginLeft:8}}>{v}</span>
           </div>
         )}
       </div>
@@ -432,32 +462,22 @@ export default function App(){
 
     return <>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {card("FIRE Number",fmtS(c.fireNum),"Portfolio needed","#7c3aed")}
-        {card("Current Portfolio",fmtS(c.nw),"Investable net worth","#1d4ed8")}
-        {card("Projected at Retire",fmtS(c.projNW),`At age ${inp.retAge}`,c.projNW>=c.fireNum?"#059669":"#dc2626")}
-        {card("Savings Rate",`${c.savR.toFixed(0)}%`,"Of after-tax income",c.savR>=20?"#059669":"#d97706")}
+        {[["FIRE Number",fmtS(c.fireNum),"Portfolio needed","#7c3aed"],["Current Portfolio",fmtS(c.nw),"Investable net worth","#1d4ed8"],["Projected at Retire",fmtS(c.projNW),`At age ${inp.retAge}`,c.projNW>=c.fireNum?"#059669":"#dc2626"],["Savings Rate",`${c.savR.toFixed(0)}%`,"Of after-tax income",c.savR>=20?"#059669":"#d97706"]].map(([l,v,s,cl])=>
+          <div key={l} style={{background:"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
+            <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 4px"}}>{l}</p>
+            <p style={{fontSize:18,fontWeight:800,color:cl,margin:"0 0 2px"}}>{v}</p>
+            <p style={{fontSize:10,color:"#9ca3af",margin:0}}>{s}</p>
+          </div>
+        )}
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        <div style={{background:"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
-          <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 3px"}}>Retirement expenses</p>
-          <p style={{fontSize:17,fontWeight:800,color:"#1d4ed8",margin:"0 0 2px"}}>{fmt(c.mre)}/mo</p>
-          <p style={{fontSize:10,color:"#059669",margin:0}}>Saves {fmt(c.debtPmt)}/mo — no mortgage</p>
-        </div>
-        <div style={{background:"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
-          <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 3px"}}>Annual need from portfolio</p>
-          <p style={{fontSize:17,fontWeight:800,color:"#7c3aed",margin:"0 0 2px"}}>{fmt(c.portNeed)}</p>
-          <p style={{fontSize:10,color:"#9ca3af",margin:0}}>After CPP {fmtS(c.cpp)} + OAS {fmtS(c.oas)}</p>
-        </div>
-        <div style={{background:"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
-          <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 3px"}}>Contribution FV</p>
-          <p style={{fontSize:17,fontWeight:800,color:c.g>0?"#059669":"#374151",margin:"0 0 2px"}}>{fmtS(c.cFV)}</p>
-          <p style={{fontSize:10,color:"#9ca3af",margin:0}}>Growing {inp.incGrowth}%/yr</p>
-        </div>
-        <div style={{background:"#fafaf9",borderRadius:10,padding:"12px 14px",border:"1px solid #e7e5e4"}}>
-          <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 3px"}}>Home at {inp.retAge}</p>
-          <p style={{fontSize:17,fontWeight:800,color:"#374151",margin:"0 0 2px"}}>{fmtS(c.projHome)}</p>
-          <p style={{fontSize:10,color:"#9ca3af",margin:0}}>Mortgage-free · separate asset</p>
-        </div>
+        {[["Retirement expenses",fmt(c.mre)+"/mo","Saves "+fmt(c.debtPmt)+"/mo — no mortgage","#1d4ed8","#059669"],["Annual need from portfolio",fmt(c.portNeed),"After CPP "+fmtS(c.cpp)+" + OAS "+fmtS(c.oas),"#7c3aed","#9ca3af"],["Contribution FV",fmtS(c.cFV),"Growing "+inp.incGrowth+"%/yr",c.g>0?"#059669":"#374151","#9ca3af"],["Home at "+inp.retAge,fmtS(c.projHome),"Mortgage-free · separate asset","#374151","#9ca3af"]].map(([l,v,s,cl,sc])=>
+          <div key={l} style={{background:l.startsWith("Home")?"#fafaf9":"#fff",borderRadius:10,padding:"12px 14px",border:"1px solid #f0f0f0"}}>
+            <p style={{fontSize:10,color:"#6b7280",fontWeight:600,textTransform:"uppercase",margin:"0 0 3px"}}>{l}</p>
+            <p style={{fontSize:17,fontWeight:800,color:cl,margin:"0 0 2px"}}>{v}</p>
+            <p style={{fontSize:10,color:sc,margin:0}}>{s}</p>
+          </div>
+        )}
       </div>
       <div style={{background:"#fff",borderRadius:10,padding:14,border:"1px solid #f0f0f0"}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
@@ -532,11 +552,11 @@ export default function App(){
             <p style={{fontSize:11,fontWeight:700,color:"#065f46",margin:"0 0 2px"}}>Contributions cover FIRE target</p>
             <p style={{fontSize:10,color:"#15803d",margin:0}}>Every dollar saved is pure upside.</p>
           </div>}
-          {[["Portfolio today",fmt(c.nw),"#1d4ed8"],["Ideal today",fmt(c.ideal),"#7c3aed"],["Gap",c.gap>0?`–${fmt(c.gap)}`:`+${fmt(-c.gap)}`,c.gap>0?"#dc2626":"#059669"],["FIRE number",fmt(c.fireNum),"#374151"],["Projected",fmt(c.projNW),c.projNW>=c.fireNum?"#059669":"#dc2626"],["Home at retire",fmtS(c.projHome),"#78716c"]].map(([l,v,cl])=>
-            <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #f3f4f6"}}>
-              <span style={{fontSize:11,color:"#6b7280"}}>{l}</span>
-              <span style={{fontSize:11,fontWeight:700,color:cl}}>{v}</span>
-            </div>
+          {[["Portfolio today",fmt(c.nw),"#1d4ed8",null],["Ideal today",fmt(c.ideal),"#7c3aed","ideal"],["Gap",c.gap>0?`–${fmt(c.gap)}`:`+${fmt(-c.gap)}`,c.gap>0?"#dc2626":"#059669","gap"],["FIRE number",fmt(c.fireNum),"#374151",null],["Projected",fmt(c.projNW),c.projNW>=c.fireNum?"#059669":"#dc2626",null],["Home at retire",fmtS(c.projHome),"#78716c",null]].map(([l,v,cl,tipId])=>
+                          <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #f3f4f6"}}>
+                <span style={{fontSize:11,color:"#6b7280",display:"flex",alignItems:"center"}}>{l}{tipId&&<Tip id={tipId}/>}</span>
+                <span style={{fontSize:11,fontWeight:700,color:cl}}>{v}</span>
+              </div>
           )}
           <div style={{marginTop:10,padding:"8px 10px",background:"#f0fdf4",borderRadius:7}}>
             <p style={{fontSize:10,fontWeight:700,color:"#166634",margin:"0 0 2px"}}>Govt Benefits</p>
@@ -567,14 +587,19 @@ export default function App(){
   return <div style={{display:"flex",flexDirection:"column",minHeight:"100vh",fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#f8fafc"}}>
     <div style={{background:"#fff",borderBottom:"1px solid #e5e7eb",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}>
       <div style={{display:"flex",alignItems:"center",gap:10}}>
-        <div style={{width:32,height:32,background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,color:"#fff",fontWeight:700}}>V</div>
+        <div style={{width:32,height:32,background:"linear-gradient(135deg,#1d4ed8,#7c3aed)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 1C9 1 4 6.5 4 10.5C4 13.5 6.2 16 9 16C11.8 16 14 13.5 14 10.5C14 10.5 12.5 12 11 12C11 12 14 8.5 9 1Z" fill="white"/>
+            <path d="M9 15C7.6 15 6.5 16.1 6.5 17.5C6.5 18.9 7.6 20 9 20C10.4 20 11.5 18.9 11.5 17.5C11.5 16.1 10.4 15 9 15Z" fill="rgba(255,255,255,0.85)"/>
+          </svg>
+        </div>
         <div>
           <p style={{fontSize:15,fontWeight:800,color:"#111827",margin:0,letterSpacing:"-0.02em"}}>Vestly</p>
           <p style={{fontSize:10,color:"#9ca3af",margin:0}}>Canadian FIRE Calculator</p>
         </div>
       </div>
-      <button onClick={()=>setShowSidebar(s=>!s)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",background:showSidebar?"#1d4ed8":"#f3f4f6",color:showSidebar?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
-        {showSidebar?"✕ Close":"⚙ Edit Inputs"}
+      <button onClick={()=>setShow(s=>!s)} style={{padding:"8px 14px",background:show?"#1d4ed8":"#f3f4f6",color:show?"#fff":"#374151",border:"none",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer"}}>
+        {show?"✕ Close":"⚙ Edit Inputs"}
       </button>
     </div>
     <div style={{background:c.sbg,borderBottom:`1px solid ${c.sb}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -588,28 +613,33 @@ export default function App(){
       </div>
     </div>
     <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
-      {showSidebar&&<div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:40}} onClick={()=>setShowSidebar(false)}/>}
-      <div style={{position:"fixed",top:0,bottom:0,left:0,width:320,background:"#fff",zIndex:45,transform:showSidebar?"translateX(0)":"translateX(-100%)",transition:"transform 0.25s ease",display:"flex",flexDirection:"column",boxShadow:showSidebar?"4px 0 20px rgba(0,0,0,0.15)":"none",overflowY:"auto"}}>
+      {show&&<div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:40}} onClick={()=>setShow(false)}/>}
+      <div style={{position:"fixed",top:0,bottom:0,left:0,width:320,background:"#fff",zIndex:45,transform:show?"translateX(0)":"translateX(-100%)",transition:"transform 0.25s ease",display:"flex",flexDirection:"column",boxShadow:show?"4px 0 20px rgba(0,0,0,0.15)":"none",overflowY:"auto"}}>
         <div style={{padding:"16px 16px 0",position:"sticky",top:0,background:"#fff",borderBottom:"1px solid #f0f0f0",zIndex:1}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-            <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Edit Your Numbers</p>
-            <button onClick={()=>setShowSidebar(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
+            <p style={{fontSize:14,fontWeight:700,color:"#111827",margin:0}}>Your Numbers</p>
+            <button onClick={()=>setShow(false)} style={{border:"none",background:"#f3f4f6",borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:12,color:"#6b7280"}}>Done ✓</button>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,paddingBottom:12}}>
-            {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"10px 8px",fontSize:12,fontWeight:600,borderRadius:8,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center",lineHeight:1.3}}>{t}</button>)}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,paddingBottom:12}}>
+            {STABS.map((t,idx)=><button key={idx} onClick={()=>setSt(idx)} style={{padding:"8px 4px",fontSize:11,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:st===idx?"#1d4ed8":"#f3f4f6",color:st===idx?"#fff":"#6b7280",textAlign:"center",lineHeight:1.3}}>{t}</button>)}
           </div>
           <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
             <span style={{fontSize:12,flexShrink:0}}>🔒</span>
             <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
           </div>
         </div>
-        <div style={{padding:16,flex:1}}>{renderSidebar()}</div>
+        <div style={{padding:16,flex:1}}>{sidebar()}</div>
       </div>
       <div style={{flex:1,overflowY:"auto",padding:"12px 16px 24px",maxWidth:800,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",gap:4,marginBottom:14,background:"#f3f4f6",borderRadius:10,padding:4}}>
           {DTABS.map((t,idx)=><button key={idx} onClick={()=>setDt(idx)} style={{flex:1,padding:"8px 4px",fontSize:12,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:dt===idx?"#fff":"transparent",color:dt===idx?"#111827":"#6b7280",boxShadow:dt===idx?"0 1px 3px rgba(0,0,0,0.1)":undefined,transition:"all 0.15s"}}>{t}</button>)}
         </div>
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>{renderDash()}</div>
+        <div style={{marginBottom:12,padding:"10px 14px",background:"#f8fafc",borderRadius:8,border:"1px solid #e5e7eb"}}>
+          {dt===0&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>📊 <strong style={{color:"#374151"}}>Overview</strong> — Your FIRE snapshot. See your FIRE number, how far you are today, your projected portfolio at retirement, and exactly what to do if you're off track.</p>}
+          {dt===1&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>💰 <strong style={{color:"#374151"}}>My Contributions</strong> — The difference between what you physically put in (principal) vs what your portfolio becomes with compound growth. The gap between the two lines is what the market does for you — for free.</p>}
+          {dt===2&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>🏖️ <strong style={{color:"#374151"}}>Retirement Snapshot</strong> — Your complete picture on retirement day. Monthly income breakdown (portfolio + CPP + OAS), surplus or shortfall, how long your money lasts, and your full balance sheet.</p>}
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>{dash()}</div>
       </div>
     </div>
   </div>;
