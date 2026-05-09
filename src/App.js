@@ -16,7 +16,7 @@ const DTABS=["Overview","Contributions","Retirement"];
 
 const DEF={
   age:30,retAge:55,province:"ON",life:90,
-  income:0,incGrowth:2,expenses:0,
+  takeHome:0,incGrowth:2,expenses:0,
   homeVal:0,homeApp:4,
   tfsa:0,rrsp:0,nonReg:0,cash:0,
   mTFSA:0,mRRSP:0,mOther:0,mMatch:0,
@@ -101,7 +101,7 @@ export default function App(){
     else if(gapPct<=5){status="On Track";sc="#1d4ed8";sbg="#eff6ff";sb="#93c5fd";}
     else if(gapPct<=20){status="Slightly Behind";sc="#d97706";sbg="#fffbeb";sb="#fcd34d";}
     else{status="Behind";sc="#dc2626";sbg="#fef2f2";sb="#fca5a5";}
-    const savR=(inp.income*0.72)>0?(ann/(inp.income*0.72))*100:0;
+    const savR=(inp.takeHome*12)>0?(ann/(inp.takeHome*12))*100:0;
     let fireAge=inp.retAge;
     for(let y=1;y<=55;y++){
       if(nw*Math.pow(1+r,y)+gaFV(ann,r,g,y)>=fireNum){fireAge=inp.age+y;break;}
@@ -175,9 +175,16 @@ export default function App(){
 
   const SL=({label,k,min,max,step=0.5,suf="",hint=""})=>(
     <div style={{marginBottom:18}}>
-      <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
         <span style={{fontSize:14,color:"#374151",fontWeight:500}}>{label}</span>
-        <span style={{fontSize:15,color:"#1d4ed8",fontWeight:700}}>{inp[k]}{suf}</span>
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          <input
+            type="number" value={inp[k]} step={step} min={min} max={max}
+            onChange={e=>{const v=Math.min(max,Math.max(min,parseFloat(e.target.value)||min));setInp(p=>({...p,[k]:v}));}}
+            style={{width:64,padding:"4px 8px",border:"1px solid #e5e7eb",borderRadius:6,fontSize:14,fontWeight:700,color:"#1d4ed8",textAlign:"right",outline:"none",background:"#f0f6ff"}}
+          />
+          <span style={{fontSize:13,color:"#1d4ed8",fontWeight:700}}>{suf}</span>
+        </div>
       </div>
       <input type="range" min={min} max={max} step={step} value={inp[k]}
         onChange={e=>setInp(p=>({...p,[k]:Number(e.target.value)}))}
@@ -226,7 +233,7 @@ export default function App(){
 
     if(st===1) return <>
       {sec("Income")}
-      <F label="Gross Annual Income" k="income" opts={{pre:"$",step:1000}}/>
+      <F label="Monthly Take-Home Pay" k="takeHome" opts={{pre:"$",step:100,hint:"Your actual after-tax income each month — what hits your bank account"}}/>
       <F label="Annual Income Growth Rate" k="incGrowth" opts={{suf:"%",step:0.5,hint:`Contributions grow at this rate yearly → FV: ${fmtS(c.cFV)}`}}/>
       {sec("Expenses")}
       <F label="Total Monthly Expenses" k="expenses" opts={{pre:"$",step:100,hint:"Include mortgage + all lifestyle costs"}}/>
@@ -422,7 +429,7 @@ export default function App(){
       </div>
       <div style={{background:"#fff",borderRadius:10,padding:14,border:"1px solid #f0f0f0"}}>
         <p style={{fontSize:13,fontWeight:700,color:"#111827",margin:"0 0 12px"}}>Monthly Income at Retirement</p>
-                  {[["From portfolio (SWR "+inp.swr+"%)",c.mPort,"#1d4ed8"],["CPP (Canada Pension Plan)",c.mCPP,"#059669"],["OAS (Old Age Security)",c.mOAS,"#059669"]].map(([l,v,cl])=>
+        {[["From portfolio (SWR "+inp.swr+"%)",c.mPort,"#1d4ed8"],["CPP (Canada Pension Plan)",c.mCPP,"#059669"],["OAS (Old Age Security)",c.mOAS,"#059669"]].map(([l,v,cl])=>
           <div key={l} style={{marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
               <span style={{fontSize:12,color:"#6b7280"}}>{l}</span>
@@ -553,10 +560,10 @@ export default function App(){
             <p style={{fontSize:10,color:"#15803d",margin:0}}>Every dollar saved is pure upside.</p>
           </div>}
           {[["Portfolio today",fmt(c.nw),"#1d4ed8",null],["Ideal today",fmt(c.ideal),"#7c3aed","ideal"],["Gap",c.gap>0?`–${fmt(c.gap)}`:`+${fmt(-c.gap)}`,c.gap>0?"#dc2626":"#059669","gap"],["FIRE number",fmt(c.fireNum),"#374151",null],["Projected",fmt(c.projNW),c.projNW>=c.fireNum?"#059669":"#dc2626",null],["Home at retire",fmtS(c.projHome),"#78716c",null]].map(([l,v,cl,tipId])=>
-                          <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #f3f4f6"}}>
-                <span style={{fontSize:11,color:"#6b7280",display:"flex",alignItems:"center"}}>{l}{tipId&&<Tip id={tipId}/>}</span>
-                <span style={{fontSize:11,fontWeight:700,color:cl}}>{v}</span>
-              </div>
+            <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #f3f4f6"}}>
+              <span style={{fontSize:11,color:"#6b7280",display:"flex",alignItems:"center"}}>{l}{tipId&&<Tip id={tipId}/>}</span>
+              <span style={{fontSize:11,fontWeight:700,color:cl}}>{v}</span>
+            </div>
           )}
           <div style={{marginTop:10,padding:"8px 10px",background:"#f0fdf4",borderRadius:7}}>
             <p style={{fontSize:10,fontWeight:700,color:"#166634",margin:"0 0 2px"}}>Govt Benefits</p>
@@ -625,7 +632,7 @@ export default function App(){
           </div>
           <div style={{display:"flex",alignItems:"flex-start",gap:7,marginBottom:12,padding:"8px 10px",background:"#f0fdf4",borderRadius:8,border:"1px solid #bbf7d0"}}>
             <span style={{fontSize:12,flexShrink:0}}>🔒</span>
-            <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared. If you subscribe to updates, only your email is collected.</p>
+            <p style={{fontSize:10,color:"#166534",margin:0,lineHeight:1.5}}>Your financial data is calculated locally in your browser and never stored or shared.</p>
           </div>
         </div>
         <div style={{padding:16,flex:1}}>{sidebar()}</div>
@@ -634,10 +641,19 @@ export default function App(){
         <div style={{display:"flex",gap:4,marginBottom:14,background:"#f3f4f6",borderRadius:10,padding:4}}>
           {DTABS.map((t,idx)=><button key={idx} onClick={()=>setDt(idx)} style={{flex:1,padding:"8px 4px",fontSize:12,fontWeight:600,borderRadius:7,border:"none",cursor:"pointer",background:dt===idx?"#fff":"transparent",color:dt===idx?"#111827":"#6b7280",boxShadow:dt===idx?"0 1px 3px rgba(0,0,0,0.1)":undefined,transition:"all 0.15s"}}>{t}</button>)}
         </div>
-        <div style={{marginBottom:12,padding:"10px 14px",background:"#f8fafc",borderRadius:8,border:"1px solid #e5e7eb"}}>
-          {dt===0&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>📊 <strong style={{color:"#374151"}}>Overview</strong> — Your FIRE snapshot. See your FIRE number, how far you are today, your projected portfolio at retirement, and exactly what to do if you're off track.</p>}
-          {dt===1&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>💰 <strong style={{color:"#374151"}}>My Contributions</strong> — The difference between what you physically put in (principal) vs what your portfolio becomes with compound growth. The gap between the two lines is what the market does for you — for free.</p>}
-          {dt===2&&<p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.5}}>🏖️ <strong style={{color:"#374151"}}>Retirement Snapshot</strong> — Your complete picture on retirement day. Monthly income breakdown (portfolio + CPP + OAS), surplus or shortfall, how long your money lasts, and your full balance sheet.</p>}
+        <div style={{marginBottom:12,padding:"12px 14px",background:"#f8fafc",borderRadius:8,border:"1px solid #e5e7eb"}}>
+          {dt===0&&<>
+            <p style={{fontSize:12,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>📊 Overview</p>
+            <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>Your complete FIRE snapshot. Shows your FIRE number (what you need), your current portfolio, your projected value at retirement, and your progress to financial independence. The gap analysis tells you exactly where you stand on the ideal savings path — and the course corrections panel tells you the three levers you can pull if you're behind.</p>
+          </>}
+          {dt===1&&<>
+            <p style={{fontSize:12,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>💰 Contributions</p>
+            <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>The difference between what you physically put in (principal) and what your portfolio actually becomes with compound growth. The gap between the two lines on the chart is what the market does for you — for free, over time. The bigger the gap, the harder your money is working. This view shows why starting early matters more than contributing more later.</p>
+          </>}
+          {dt===2&&<>
+            <p style={{fontSize:12,fontWeight:700,color:"#111827",margin:"0 0 4px"}}>🏖️ Retirement Snapshot</p>
+            <p style={{fontSize:11,color:"#6b7280",margin:0,lineHeight:1.6}}>Your complete picture on retirement day. Breaks down where your monthly income comes from — your portfolio (via safe withdrawal), CPP, and OAS — and shows whether that income covers your expenses or leaves a shortfall. Also shows how long your portfolio lasts, your full balance sheet including home equity and RESP, and the surplus or gap vs your FIRE number.</p>
+          </>}
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:12}}>{dash()}</div>
       </div>
