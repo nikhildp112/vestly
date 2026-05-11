@@ -46,7 +46,7 @@ const GUIDE=[
     {t:"TFSA",d:"Tax-Free Savings Account. ALL growth and withdrawals are 100% tax-free. 2024 limit: $7,000/year. Cumulative room since 2009: $95,000. Max this before non-registered investing."},
     {t:"RRSP",d:"Registered Retirement Savings Plan. Contributions reduce taxable income today, but withdrawals are taxed in retirement. Best when you contribute at high tax rates and withdraw at lower ones."},
     {t:"RESP",d:"Registered Education Savings Plan. Grows tax-free. Withdrawals taxed in the child's hands — usually $0 tax as a student. Lifetime limit: $50,000 per child."},
-    {t:"CESG",d:"Canada Education Savings Grant — free government money. 20% on first $2,500/child/year = $500/year free, up to $7,200 lifetime. Contribute $208/month per child to maximize it."},
+    {t:"CESG",d:"Canada Education Savings Grant — free government money. 20% on first $2,500/child/year = $500/year free, up to $7,200 lifetime. Contribute $209/month per child to maximize it."},
   ]},
   {title:"🇨🇦 Government Benefits",items:[
     {t:"CPP",d:"Canada Pension Plan — earned by working. Max 2024: ~$16,375/year. Available from age 60 (reduced) to 70 (increased). Calculator estimates ~70% of max based on years worked."},
@@ -179,7 +179,7 @@ export default function App() {
     const cpp=inp.retAge>=60?(yw/39)*0.70*16375:0;
     const oas=inp.retAge>=65?8784:0;
     const portNeed=Math.max(annRet-cpp-oas,annRet*0.25);
-    const fireNum=portNeed/swrR;
+    const fireNum=swrR>0?portNeed/swrR:portNeed*100;
     const nw=inp.tfsa+inp.rrsp+inp.nonReg+inp.cash;
     const ann=(inp.mTFSA+inp.mRRSP+inp.mOther+inp.mMatch)*12;
     const fvF=Math.pow(1+r,n);
@@ -370,7 +370,7 @@ export default function App() {
       {sec("Model Assumptions")}
       <SL label="Expected Annual Return"  k="ret"     min={0}  max={15} step={0.5}  suf="%" hint="Historical diversified index: 7–10%. Use 6–7% for conservative planning."/>
       <SL label="Inflation Rate"          k="inf"     min={0}  max={8}  step={0.5}  suf="%" hint="At 3%, $100 today costs $134 in 10 years. Applied to retirement expenses automatically."/>
-      <SL label="Safe Withdrawal Rate"    k="swr"     min={0}  max={8}  step={0.25} suf="%" hint="4% rule = need 25× annual spending. Lower = safer but requires more savings."/>
+      <SL label="Safe Withdrawal Rate"    k="swr"     min={0.25}  max={8}  step={0.25} suf="%" hint="4% rule = need 25× annual spending. Lower = safer but requires more savings."/>
       <SL label="Home Appreciation Rate"  k="homeApp" min={0}  max={10} step={0.5}  suf="%" hint="Canadian avg ~4%/yr. Varies widely by city."/>
       <div style={{padding:12,background:"#f9fafb",borderRadius:8,border:"1px solid #f0f0f0",marginTop:4}}>
         <p style={{fontSize:11,fontWeight:700,color:"#374151",margin:"0 0 8px"}}>Est. Government Benefits</p>
