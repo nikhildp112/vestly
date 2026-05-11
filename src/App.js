@@ -1,4 +1,4 @@
-import { useState, useMemo, createContext, useContext } from "react";
+import { useState, useMemo, useEffect, createContext, useContext } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -69,6 +69,15 @@ const FormCtx = createContext(null);
 function F({ label, k, opts={} }) {
   const { inp, setInp } = useContext(FormCtx);
   const [raw, setRaw] = useState(inp[k] === 0 ? "" : String(inp[k]));
+  const [focused, setFocused] = useState(false);
+
+  // Keep raw in sync with inp[k] whenever the field is not being actively edited.
+  // This is what makes values survive tab switches, sidebar close/reopen, etc.
+  useEffect(() => {
+    if (!focused) {
+      setRaw(inp[k] === 0 ? "" : String(inp[k]));
+    }
+  }, [inp[k], focused]);
 
   const onChange = e => {
     const str = e.target.value;
@@ -77,8 +86,11 @@ function F({ label, k, opts={} }) {
     if (!isNaN(n)) setInp(p => ({ ...p, [k]: n }));
     else if (str === "" || str === "-") setInp(p => ({ ...p, [k]: 0 }));
   };
-  const onBlur  = () => setRaw(inp[k] === 0 ? "" : String(inp[k]));
-  const onFocus = e  => { if (!e.target.value || e.target.value === "0") setRaw(""); };
+  const onFocus = () => setFocused(true);
+  const onBlur  = () => {
+    setFocused(false);
+    setRaw(inp[k] === 0 ? "" : String(inp[k]));
+  };
 
   return (
     <div style={{marginBottom:14}}>
@@ -91,7 +103,7 @@ function F({ label, k, opts={} }) {
         <input
           type="text" inputMode="decimal"
           value={raw}
-          onChange={onChange} onBlur={onBlur} onFocus={onFocus}
+          onChange={onChange} onFocus={onFocus} onBlur={onBlur}
           style={{flex:1,padding:"11px 13px",border:"none",background:"transparent",
             outline:"none",fontSize:15,color:"#111827"}}
         />
@@ -106,6 +118,11 @@ function F({ label, k, opts={} }) {
 function SL({ label, k, min, max, step=0.5, suf="", hint="" }) {
   const { inp, setInp } = useContext(FormCtx);
   const [raw, setRaw] = useState(String(inp[k]));
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (!focused) setRaw(String(inp[k]));
+  }, [inp[k], focused]);
 
   const onText = e => {
     const str = e.target.value;
@@ -113,7 +130,7 @@ function SL({ label, k, min, max, step=0.5, suf="", hint="" }) {
     const v = parseFloat(str);
     if (!isNaN(v) && v >= min && v <= max) setInp(p => ({ ...p, [k]: v }));
   };
-  const onTextBlur = () => setRaw(String(inp[k]));
+  const onTextBlur = () => { setFocused(false); setRaw(String(inp[k])); };
   const onSlider   = e => {
     const v = Number(e.target.value);
     setInp(p => ({ ...p, [k]: v }));
@@ -127,7 +144,7 @@ function SL({ label, k, min, max, step=0.5, suf="", hint="" }) {
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           <input
             type="text" inputMode="decimal" value={raw}
-            onChange={onText} onBlur={onTextBlur}
+            onChange={onText} onFocus={()=>setFocused(true)} onBlur={onTextBlur}
             style={{width:56,padding:"4px 8px",border:"1px solid #e5e7eb",borderRadius:6,
               fontSize:14,fontWeight:700,color:"#1d4ed8",textAlign:"right",
               outline:"none",background:"#f0f6ff"}}
